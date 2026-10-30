@@ -4,7 +4,7 @@ A desktop app that plays generative music for focused work. Each of its sound wo
 
 **Built:** October 2026 | **Runs as:** an Electron desktop app on Windows
 
-https://github.com/user-attachments/assets/f58db4d2-0343-421e-9ed8-2bff0616140c
+https://github.com/user-attachments/assets/97c01001-6a5d-48a5-a7dd-c91f9aa8e899
 
 *Four 20-second excerpts, rendered offline. It's the same audio the app plays, raised in level for listening.*
 
