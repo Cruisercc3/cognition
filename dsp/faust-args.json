@@ -1,0 +1,6 @@
+{
+  "comment": "Single source of compile settings for every path: precompile (tools/dsp/build-dsp.ts), offline render (tools/render), and any live compile. -double: long glides/ramps and clocks need 64-bit state. -ftz 2: WebAssembly has no FTZ/DAZ, so denormals are flushed in code.",
+  "args": ["-double", "-ftz", "2"],
+  "sampleRate": 48000,
+  "blockSize": 128
+}

@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 3,
+  "id": "garden",
+  "name": "Garden",
+  "tagline": "Bloom · soft felt tones on four loops of different lengths, never the same twice.",
+  "description": "Four loops, each a soft struck tone, each repeating at its own period, none a multiple of another, so their combination never lines up the same way twice. Now and then a loop moves to a new note of the pentatonic. Over an open chord and a drone, in a large room with a slow echo. After Eno's Music for Airports.",
+  "use": {
+    "name": "Reflect",
+    "for": "Letting a problem sit: reviewing, mulling, incubating between bursts of work.",
+    "why": "Distraction scales with prediction error, not with rarity (rule 6); a small, consonant vocabulary of tones on slow loops gives low surprise while never repeating exactly, and exact repetition is what the ear learns and keeps (rule 7). Liking peaks at moderate predictability (rule 16, attentive listening). Garden keeps entropy low: four loops, long gaps, a pentatonic palette, long soft decays. Its tones are separate pieces, so it is not for verbal order work (rule 2). Evidence: the loop design is practitioner craft (Eno; weak); the mechanisms behind it are moderate to strong."
+  },
+  "frozen": false,
+  "program": "field",
+  "origin": "authored",
+  "parentIds": [],
+  "params": {
+    "bank/breathRate": 5,
+    "bank/breathe": 0.1,
+    "bank/bright": 750,
+    "bank/detune": 3,
+    "bank/drift": 0.35,
+    "bank/fade": 10,
+    "bank/level": -21,
+    "bank/octave": 1,
+    "bank/on": 1,
+    "bank/saw": 0.35,
+    "bank/swell": 0.15,
+    "bank/v1": 0,
+    "bank/v2": 4,
+    "bank/v3": 8,
+    "bank/v4": 11,
+    "bloom/attack": 0.02,
+    "bloom/bright": 0.3,
+    "bloom/decay": 6.5,
+    "bloom/every": 21,
+    "bloom/level": -22,
+    "bloom/octave": 2,
+    "bloom/on": 1,
+    "bloom/scale": 0,
+    "bloom/space": 0.65,
+    "bloom/span": 7,
+    "bloom/tone": 0.2,
+    "bloom/voices": 4,
+    "bloom/wander": 0.25,
+    "bpm": 60,
+    "breath/level": -36,
+    "breath/on": 0,
+    "breath/q": 18,
+    "drone/fifth": 0.2,
+    "drone/level": -29,
+    "drone/octave": 0,
+    "drone/on": 1,
+    "glow/bloom": 15,
+    "glow/level": -38,
+    "glow/octave": 2,
+    "glow/on": 1,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "lattice/attack": 0.006,
+    "lattice/bright": 0.35,
+    "lattice/decay": 0.7,
+    "lattice/density": 1,
+    "lattice/lag": 0,
+    "lattice/level": -24,
+    "lattice/octave": 1,
+    "lattice/on": 0,
+    "lattice/pattern": 0,
+    "lattice/rate": 2,
+    "lattice/space": 0.35,
+    "lattice/spread": 0.35,
+    "lattice/tone": 0.6,
+    "master/drive": 0.06,
+    "master/glue": 0.25,
+    "master/glueThreshold": -14,
+    "master/level": -8.4,
+    "motion/amount": 1,
+    "phase/on": 0,
+    "space/crossfeed": 0.2,
+    "space/damp": 3800,
+    "space/dubDiv": 3,
+    "space/dubFeedback": 0.35,
+    "space/dubMix": 0.18,
+    "space/dubTone": 2000,
+    "space/room": 0.5,
+    "space/roomT60": 6,
+    "space/width": 1,
+    "tonal/mode": 2,
+    "tonal/root": 38
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "bank/on": 0,
+      "drone/on": 0,
+      "bloom/on": 0,
+      "glow/on": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "chord",
+          "set": {
+            "bank/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "drone",
+          "set": {
+            "drone/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "tones",
+          "set": {
+            "bloom/on": 1
+          },
+          "fadeBars": 8
+        },
+        {
+          "name": "harmonics",
+          "set": {
+            "glow/on": 1
+          },
+          "fadeBars": 24
+        }
+      ],
+      "fixed": 2,
+      "top": 4,
+      "foundationMinutes": 2,
+      "minutes": 7,
+      "wobble": 1,
+      "tide": {
+        "everyMinutes": [
+          28,
+          38
+        ],
+        "floor": 2
+      }
+    },
+    "sectionBars": 16,
+    "moves": {
+      "add": 0.1,
+      "drop": 0.1,
+      "vary": 0.3,
+      "drift": 0.3,
+      "shift": 0.1,
+      "rest": 0.1
+    },
+    "variations": {
+      "bank/v3": [
+        8,
+        9
+      ],
+      "bank/v4": [
+        11,
+        13
+      ],
+      "bloom/voices": [
+        3,
+        4,
+        5
+      ]
+    },
+    "drift": {
+      "bloom/every": [
+        18,
+        26
+      ],
+      "bloom/decay": [
+        5,
+        8
+      ],
+      "bank/bright": [
+        650,
+        850
+      ]
+    },
+    "driftRampBars": 16,
+    "shifts": {
+      "tonal/mode": [
+        1,
+        2
+      ]
+    },
+    "shiftRampBars": 32,
+    "minSecondsBetweenChanges": 75
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

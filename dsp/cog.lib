@@ -1,0 +1,141 @@
+// cog.lib — core building blocks shared by every cognition DSP program.
+//
+// Contract with the host (see src/shared/contract.ts):
+//  * Host-settable parameters are *staged*. Nothing a host writes reaches the sound
+//    until a commit latches it. The host writes all staged values of one batch, then
+//    `rampSec`/`immediate`, then bumps `commit` LAST.
+//  * A latch fires on the first bar line after `commit` changes (or on the next sample
+//    if `immediate` is 1). All staged values of a batch latch on the same sample.
+//  * The DSP reports `bar` and `latchedCommit` back through bargraphs, so the host knows
+//    when a change was actually heard.
+//  * Continuous parameters then move by an exact linear ramp (double precision, reaches
+//    its target exactly). Discrete parameters switch on the latch sample.
+
+declare name "cog.lib";
+
+import("stdfaust.lib");
+
+//------------------------------------------------------------------------------------
+// Utilities
+//------------------------------------------------------------------------------------
+
+impulse = 1 - 1';                    // 1 on the very first sample, then 0
+rising(x) = (x > 0) & (x' <= 0);       // one-sample trigger on a rising edge
+
+//------------------------------------------------------------------------------------
+// Seeded, decorrelated noise
+//
+// Faust's no.noise is a fixed-seed LCG: identical on every run and fully correlated
+// between instances. Here every stream k gets its own start state derived from
+// (seed, k); a change of seed re-seeds every stream on the next sample.
+//------------------------------------------------------------------------------------
+
+hashInt(x) = h3
+with {
+  h1 = (x * 1597334677) xor ((x * 1597334677) >> 15);
+  h2 = (h1 * 747796405) xor (h1 >> 13);
+  h3 = h2 * 1103515245 + 12345;
+};
+
+// Integer LCG stream k, reseeded from `seed` at start and whenever seed changes.
+lcg(seed, k) = (step ~ _)
+with {
+  s0 = hashInt(int(seed) + k * 7919 + 1);
+  reseed = impulse | (seed != seed');
+  step(s) = select2(reseed, s * 1103515245 + 12345, s0);
+};
+
+// Uniform white noise in [-1, 1) for stream k.
+wnoise(seed, k) = lcg(seed, k) / 2147483648.0;
+
+//------------------------------------------------------------------------------------
+// Bar clock
+//
+// Phase accumulator in double precision. Tempo changes are latched to the bar line:
+// the bar that is playing always finishes at the tempo it started with.
+// Outputs: bar phase [0,1), effective bpm.
+//------------------------------------------------------------------------------------
+
+barClock(bpmTarget, beatsPerBar) = (step ~ (_, _))
+with {
+  step(ph, b) = phNext, bNext
+  with {
+    inc = b / 60.0 / beatsPerBar / ma.SR;
+    raw = ph + inc;
+    wrapped = raw >= 1.0;
+    phNext = raw - wrapped;
+    bNext = select2(wrapped | (b <= 0), b, max(1, bpmTarget));
+  };
+};
+
+barPhase(bpm, bpb) = barClock(bpm, bpb) : (_, !);
+barBpm(bpm, bpb) = barClock(bpm, bpb) : (!, _);
+
+// Same clock, but a tempo change glides: at each bar line the tempo moves toward the
+// target by at most `maxStep` bpm (so a 4 bpm change takes about 20 bars at 0.2).
+// The very first bar takes the target directly.
+barClockGlide(bpmTarget, beatsPerBar, maxStep) = (step ~ (_, _))
+with {
+  step(ph, b) = phNext, bNext
+  with {
+    inc = b / 60.0 / beatsPerBar / ma.SR;
+    raw = ph + inc;
+    wrapped = raw >= 1.0;
+    phNext = raw - wrapped;
+    tgt = max(1, bpmTarget);
+    glided = b + max(0.0 - maxStep, min(maxStep, tgt - b));
+    bNext = select2(b <= 0, select2(wrapped, b, glided), tgt);
+  };
+};
+
+// One-sample trigger at the start of every bar (including sample 0).
+barTrig(ph) = impulse | (ph < ph');
+
+// Running bar index, starting at 0 on the first bar.
+barIndex(trig) = (+(trig) ~ _) - 1;
+
+// Trigger at the start of each of n equal subdivisions of the bar.
+subTrig(ph, n) = impulse | (int(ph * n) != int(ph' * n));
+
+//------------------------------------------------------------------------------------
+// Commit latch
+//
+// latchState holds the last commit number that was latched. It takes the host's
+// commit value on the first sample where (bar line OR immediate) AND commit differs.
+// latchTrig fires on that sample (and on sample 0, so defaults load).
+//------------------------------------------------------------------------------------
+
+latchState(commit, bt, imm) = (step ~ _)
+with {
+  step(prev) = select2((bt | (imm > 0.5)) & (commit != prev), prev, commit);
+};
+
+latchTrig(commit, bt, imm) = impulse | (ls != ls')
+with { ls = latchState(commit, bt, imm); };
+
+// A discrete (switched) parameter: takes the staged value on the latch sample.
+latched(lt, x) = x : ba.sAndH(lt);
+
+// A continuous parameter: on a latch where its staged target changed, it ramps
+// linearly from wherever it currently is to the new target over rampSec.
+// State: s = ramp start value, tg = target, d = duration in samples, e = elapsed.
+// On sample 0 the default is taken instantly (no ramp from zero).
+ramped(lt, rampSec, x) = (step ~ (_, _, _, _)) : (!, !, !, !, _)
+with {
+  step(s, tg, d, e) = s2, tg2, d2, e2, v
+  with {
+    curv = select2(d > 0, tg, s + (tg - s) * min(1.0, e / max(1.0, d)));
+    changed = (lt > 0) & ((x != tg) | (impulse > 0));
+    s2 = select2(changed, s, select2(impulse, curv, x));
+    tg2 = select2(changed, tg, x);
+    d2 = select2(changed, d, select2(impulse, max(0.0, rampSec * ma.SR), 0.0));
+    e2 = select2(changed, min(e + 1.0, 1.0e15), 0.0);
+    v = select2(d2 > 0, tg2, s2 + (tg2 - s2) * min(1.0, e2 / max(1.0, d2)));
+  };
+};
+
+//------------------------------------------------------------------------------------
+// Level helpers
+//------------------------------------------------------------------------------------
+
+db2lin(db) = pow(10.0, db / 20.0);

@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 3,
+  "id": "shoreline",
+  "name": "Shoreline",
+  "tagline": "The sea breathing slowly, a warm pad, open chords far off.",
+  "description": "The sea, close and wide, swelling and falling slowly over a distant wash. A warm pad breathing in front; open chords far off, coming back through a long delay; a deep note blooming slowly beneath. Soft brushes and a faint heartbeat come and go. No kick drum.",
+  "use": {
+    "name": "Settle",
+    "for": "Arriving, winding down, or coming back from a break.",
+    "why": "The lowest arousal in the family: no kick drum, the slowest change, a warm, dark sound. The sea swells about five or six times a minute, the pace of slow, calm breathing; breathe with it if you like (paced breathing has good evidence for calming, but only when you do it yourself; just hearing it is unproven). Natural sound has the best evidence of anything here for lowering stress (a moderate effect) and for restoring attention after effort."
+  },
+  "frozen": false,
+  "program": "deepwork",
+  "origin": "authored",
+  "parentIds": [
+    "deep-work"
+  ],
+  "params": {
+    "acid/accent": 0.2,
+    "acid/cutoff": 300,
+    "acid/decay": 0.2,
+    "acid/drive": 0.3,
+    "acid/dubSend": 0.3,
+    "acid/envMod": 1.4,
+    "acid/gate": 0.5,
+    "acid/ghost": 0.04,
+    "acid/level": -19,
+    "acid/mask": 18504,
+    "acid/motion": 0.05,
+    "acid/octave": 0,
+    "acid/on": 0,
+    "acid/pan": 0.05,
+    "acid/prob": 0.8,
+    "acid/res": 0.6,
+    "acid/slide": 0.15,
+    "acid/sweep": 1,
+    "acid/sweepBars": 64,
+    "acid/wave": 0,
+    "beta/chords": 0,
+    "beta/depth": 0,
+    "bpm": 98,
+    "clap/decay": 0.14,
+    "clap/level": -20,
+    "clap/mask": 4112,
+    "clap/on": 0,
+    "clap/pan": 0.05,
+    "clap/prob": 1,
+    "clap/tone": 1300,
+    "glass/decay": 3,
+    "glass/dubSend": 0.2,
+    "glass/every": 20,
+    "glass/level": -30,
+    "glass/octave": 2,
+    "glass/on": 0,
+    "glass/tone": 0.4,
+    "groove/humanize": 4,
+    "groove/swing": 0.04,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "hats/attack": 0.006,
+    "hats/bright": 4200,
+    "hats/decay": 0.09,
+    "hats/ghost": 0,
+    "hats/level": -34,
+    "hats/mask": 17476,
+    "hats/metal": 0,
+    "hats/on": 1,
+    "hats/pan": 0.05,
+    "hats/prob": 0.45,
+    "hats/spread": 0.3,
+    "hats/tune": 1,
+    "hats/velocity": 2,
+    "hum/level": -34,
+    "hum/on": 0,
+    "hum/rush": -12,
+    "hum/tone": 400,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "kick/attack": 0.012,
+    "kick/click": 0,
+    "kick/decay": 0.55,
+    "kick/drive": 0,
+    "kick/drop": 0.6,
+    "kick/dropTime": 0.06,
+    "kick/level": -20,
+    "kick/mask": 257,
+    "kick/on": 1,
+    "kick/pitch": 42,
+    "kick/prob": 1,
+    "kick/tone": 160,
+    "light/level": -30,
+    "light/octave": 3,
+    "light/on": 0,
+    "light/swell": 9,
+    "light/tone": 0.3,
+    "master/drive": 0.1,
+    "master/glue": 0.15,
+    "master/glueThreshold": -12,
+    "master/level": -11.8,
+    "motion/amount": 1.2,
+    "noise/air": -62,
+    "noise/airFollow": 0,
+    "noise/colour": 0.5,
+    "noise/gust": 0,
+    "noise/level": -54,
+    "noise/on": 0,
+    "noise/pump": 0,
+    "ohat/bright": 7000,
+    "ohat/decay": 0.16,
+    "ohat/level": -24,
+    "ohat/mask": 17476,
+    "ohat/on": 0,
+    "ohat/pan": -0.15,
+    "ohat/prob": 0.6,
+    "pad/breath": 3,
+    "pad/bright": 520,
+    "pad/detune": 9,
+    "pad/drift": 1,
+    "pad/level": -14,
+    "pad/octave": 1,
+    "pad/on": 1,
+    "pad/shape": 0.65,
+    "parts/bright": 900,
+    "parts/detune": 4,
+    "parts/fade": 6,
+    "parts/inner1": 3,
+    "parts/inner2": 10,
+    "parts/level": -30,
+    "parts/low": 0,
+    "parts/octave": 1,
+    "parts/on": 0,
+    "parts/top": 19,
+    "perc/body": 0.2,
+    "perc/freq": 1100,
+    "perc/level": -14,
+    "perc/mask": 8320,
+    "perc/on": 0,
+    "perc/pan": -0.2,
+    "perc/prob": 0.25,
+    "perc/q": 12,
+    "perc/spread": 0.2,
+    "rain/density": 600,
+    "rain/level": -30,
+    "rain/on": 0,
+    "rain/tone": 2500,
+    "rain/wash": -8,
+    "sea/level": -5.4,
+    "sea/on": 1,
+    "sea/rate": 5.5,
+    "sea/tone": 800,
+    "sea/wash": -12,
+    "series/bloom": 14,
+    "series/level": -30,
+    "series/octave": 0,
+    "series/on": 0,
+    "series/seven": 0,
+    "series/tilt": 0.5,
+    "series/width": 0.4,
+    "space/crossfeed": 0.2,
+    "space/dubDiv": 2,
+    "space/dubFeedback": 0.6,
+    "space/dubMix": 0.45,
+    "space/dubTone": 1300,
+    "space/duck": 0,
+    "space/duckAttack": 0.003,
+    "space/duckRelease": 0.16,
+    "space/duckShape": 0,
+    "space/room": 0.3,
+    "space/roomT60": 4,
+    "space/width": 0.95,
+    "stab/cutoff": 420,
+    "stab/decay": 1,
+    "stab/detune": 10,
+    "stab/dubSend": 1,
+    "stab/envAmt": 0.5,
+    "stab/filterDecay": 0.4,
+    "stab/level": -13,
+    "stab/mask": 1088,
+    "stab/octave": 1,
+    "stab/on": 1,
+    "stab/prob": 0.2,
+    "stab/res": 0.12,
+    "sub/cutoff": 110,
+    "sub/decay": 1.4,
+    "sub/drive": 0,
+    "sub/ghost": 0,
+    "sub/glide": 0.1,
+    "sub/hold": 0,
+    "sub/level": -10,
+    "sub/mask": 257,
+    "sub/motion": 0.05,
+    "sub/octave": -1,
+    "sub/on": 1,
+    "sub/prob": 0.9,
+    "tonal/chord": 2,
+    "tonal/root": 41,
+    "veil/body": -12,
+    "veil/breath": 0.25,
+    "veil/level": -30,
+    "veil/on": 0,
+    "veil/tilt": 0.5
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "sea/on": 0,
+      "pad/on": 0,
+      "sub/on": 0,
+      "stab/on": 0,
+      "hats/on": 0,
+      "kick/on": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "sea",
+          "set": {
+            "sea/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "pad",
+          "set": {
+            "pad/on": 1
+          },
+          "fadeBars": 32
+        },
+        {
+          "name": "deep note",
+          "set": {
+            "sub/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "chords",
+          "set": {
+            "stab/on": 1
+          },
+          "fadeBars": 32
+        },
+        {
+          "name": "brushes",
+          "set": {
+            "hats/on": 1
+          },
+          "fadeBars": 32
+        },
+        {
+          "name": "heartbeat",
+          "set": {
+            "kick/on": 1
+          },
+          "fadeBars": 32
+        }
+      ],
+      "fixed": 4,
+      "top": 5,
+      "foundationMinutes": 4,
+      "minutes": 12,
+      "wobble": 1,
+      "tide": null
+    },
+    "sectionBars": 32,
+    "moves": {
+      "add": 0.15,
+      "drop": 0.15,
+      "vary": 0.15,
+      "drift": 0.4,
+      "rest": 0.15
+    },
+    "variations": {
+      "stab/mask": [
+        1088,
+        4160,
+        1056
+      ],
+      "sub/mask": [
+        257,
+        1
+      ],
+      "hats/mask": [
+        17476,
+        1028
+      ]
+    },
+    "drift": {
+      "pad/bright": [
+        420,
+        650
+      ],
+      "sea/tone": [
+        600,
+        1100
+      ],
+      "sea/rate": [
+        5,
+        6
+      ],
+      "stab/cutoff": [
+        340,
+        520
+      ],
+      "space/dubFeedback": [
+        0.5,
+        0.66
+      ]
+    },
+    "driftRampBars": 16,
+    "minSecondsBetweenChanges": 80
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

@@ -1,0 +1,124 @@
+// engine.lib — building blocks for the engines after Pulse (the Field engine first).
+//
+// The Pulse engine (deepwork.dsp) keeps its own copies of these, unchanged, so the sound
+// you kept stays bit-for-bit as it is. New engines take them from here, so they obey the
+// same contract (cog.lib), the same Sensory Guard, limiter and output floor.
+
+declare name "engine.lib";
+
+import("stdfaust.lib");
+import("cog.lib");
+
+//------------------------------------------------------------------------------------
+// Slow motion and time
+//------------------------------------------------------------------------------------
+
+// Bounded slow random walk: a new random target every `sec`, approached by a one-pole.
+walk(seed, k, sec) = ((wnoise(seed, k) : ba.sAndH(ba.pulse(int(sec * ma.SR)) | impulse)) : si.smooth(ba.tau2pole(sec * 0.5)));
+// Two incommensurate periods (1/f-ish), range about [-1, 1].
+drift2(seed, k, s1, s2) = walk(seed, k, s1) * 0.6 + walk(seed, k + 1, s2) * 0.4;
+
+// Uniform in [0, 1) for stream k.
+u01(seed, k) = (wnoise(seed, k) + 1.0) * 0.5;
+
+// Samples since the last trigger, and whether a trigger ever happened.
+tsince(trig) = (\(c).(select2(trig > 0, min(c + 1.0, 1.0e12), 0.0))) ~ _;
+everTrig(trig) = ((+(trig)) ~ _) > 0;
+
+// Free-running phase accumulator, and one that resets on a trigger.
+phasor(f) = (\(p).(ma.frac(p + f / ma.SR))) ~ _;
+phasorReset(trig, f) = (\(p).(select2(trig > 0, ma.frac(p + f / ma.SR), 0.0))) ~ _;
+
+// Exponential decay, retriggered to `amp` (no exp per sample).
+decay(trig, amp, sec) = (\(e).(select2(trig > 0, e * (1.0 - 1.0 / max(1.0, sec * ma.SR)), amp))) ~ _;
+
+// A strike's envelope. It rises from wherever it is to `peak` over `att`, then decays with
+// time constant `dec`. A new strike never jumps: it starts from the level the last one
+// had reached, so a voice can be struck again while it still rings, without a click.
+envR(trig, peak, att, dec) = (step ~ (_, _)) : (_, !)
+with {
+  step(e, a) = e2, a2
+  with {
+    a2 = select2(trig > 0, select2(e >= peak, a, 0), 1);
+    up = e + peak / max(1.0, att * ma.SR);
+    down = e * (1.0 - 1.0 / max(1.0, dec * ma.SR));
+    e2 = select2((a2 > 0) & (e < peak), down, min(peak, up));
+  };
+};
+
+//------------------------------------------------------------------------------------
+// Tables: no pow() or sin() per sample in the voices
+//------------------------------------------------------------------------------------
+
+// A sine read from a table, phase in [0, 1).
+sineTab(p) = rdtable(65536, sin(2.0 * ma.PI * float(ba.time) / 65536.0), int(p * 65536.0));
+// The frequency of MIDI note n (integer notes 0..127).
+midiHz(n) = rdtable(128, 440.0 * pow(2.0, (float(ba.time) - 69.0) / 12.0), int(max(0, min(127, n))));
+
+//------------------------------------------------------------------------------------
+// Placement
+//------------------------------------------------------------------------------------
+
+pan(p, x) = x * cos((p + 1.0) * ma.PI / 4.0), x * sin((p + 1.0) * ma.PI / 4.0);
+panPair(p, l, r) = l * cos((p + 1.0) * ma.PI / 4.0), r * sin((p + 1.0) * ma.PI / 4.0);
+L(s) = s : (_, !);
+R(s) = s : (!, _);
+
+// M/S width with the bass kept mono; mild headphone crossfeed.
+msWidth(width, l, r) = m + s, m - s
+with { m = (l + r) * 0.5; s = ((l - r) * 0.5 : fi.highpass(2, 140)) * width; };
+xfeed(amt, l, r) = (l + cf(r)) / (1.0 + amt), (r + cf(l)) / (1.0 + amt)
+with { cf(x) = x : fi.lowpass(1, 700) : de.delay(64, 14) : *(amt); };
+
+// Ping-pong tape delay: each line feeds the other, so echoes alternate L / R. `t` is the
+// delay in samples (already smoothed), `fb` the feedback, `lp` the tone of the repeats.
+pingpong(t, fb, lp) = (step ~ (_, _))
+with {
+  fbx(s) = s : fi.highpass(1, 160) : fi.lowpass(1, lp) : *(fb) : ma.tanh;
+  step(pL, pR, inL, inR) = ((inL + fbx(pR)) : de.fdelay(65536, t)),
+                           ((inR + fbx(pL)) : de.fdelay(65536, t));
+};
+
+//------------------------------------------------------------------------------------
+// Bus, Sensory Guard, limiter, keep-alive (as in the Pulse engine)
+//------------------------------------------------------------------------------------
+
+// Glue compression + tape saturation.
+bus(glue, thresh, tape) = co.compressor_stereo(1.0 + glue * 3.0, thresh, 0.015, 0.2) : (sat, sat)
+with { tg = 1.0 + tape * 1.5; sat(x) = ma.tanh(x * tg) / tg; };
+
+kweight(x) = x : fi.highpass(1, 60) : fi.high_shelf(4.0, 1500.0);
+msOf(l, r, tau) = ((kweight(l) ^ 2 + kweight(r) ^ 2) * 0.5) : si.smooth(ba.tau2pole(tau));
+lin2db(x) = 10.0 * log10(max(x, 1.0e-12));     // for mean-square values
+amp2db(x) = 20.0 * log10(max(x, 1.0e-9));
+
+// Stage 1: slow loudness reduction + brightness cap (both cut only).
+guardStage(maxLoudDb, maxBright, l, r) = l2, r2
+with {
+  st   = lin2db(msOf(l, r, 1.5));
+  grDb = min(0.0, maxLoudDb - st) : si.smooth(ba.tau2pole(2.0));
+  g    = db2lin(grDb);
+  hf   = (((l : fi.highpass(2, 4000)) ^ 2 + (r : fi.highpass(2, 4000)) ^ 2) * 0.5) : si.smooth(ba.tau2pole(1.5));
+  ratio = lin2db(hf) - lin2db(msOf(l, r, 1.5) + 1.0e-12);
+  cut  = min(0.0, maxBright - ratio) : max(-18.0) : si.smooth(ba.tau2pole(1.0));
+  l2   = l * g : fi.high_shelf(cut, 4000.0);
+  r2   = r * g : fi.high_shelf(cut, 4000.0);
+};
+
+// Stage 2: lookahead limiter, ceiling relative to short-term loudness and absolute.
+limiter(crestDb, ceilDb, l, r) = attach((l @ LA) * g, st : hbargraph("h:meter/loudness[unit:dB]", -120, 0)),
+                                 attach((r @ LA) * g, amp2db(g) : hbargraph("h:meter/gainReduction[unit:dB]", -60, 0))
+with {
+  LA    = 256;
+  st    = lin2db(msOf(l, r, 1.5));
+  cdb   = min(max(st + crestDb, -50.0), ceilDb);
+  peak  = max(abs(l), abs(r)) : ba.slidingMax(LA, LA);
+  gt    = min(1.0, db2lin(cdb) / max(peak, 1.0e-9));
+  gmin  = gt : ba.slidingMin(LA, LA);
+  ac    = 1.0 - exp(-1.0 / (0.0015 * ma.SR));
+  rc    = 1.0 - exp(-1.0 / (0.25 * ma.SR));
+  g     = (\(prev).(select2(gmin < prev, prev + (gmin - prev) * rc, prev + (gmin - prev) * ac))) ~ _;
+};
+
+// The sub-audible keep-alive tone (18 Hz), added after everything else.
+floorTone(floorDb, on) = sin(2.0 * ma.PI * phasor(18.0)) * db2lin(floorDb + 3.0103) * on;

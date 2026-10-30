@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 3,
+  "id": "ink",
+  "name": "Ink",
+  "tagline": "Drift · no beat: a warm chord whose inner voices move, one at a time.",
+  "description": "No pulse. A warm minor seventh held by four voices; every minute or so one inner voice crossfades to a new note, so the harmony keeps moving without a chord ever arriving. Over a session the colour moves between Aeolian and Dorian, one note at a time. A drone, harmonics far above, pitched air.",
+  "use": {
+    "name": "Write",
+    "for": "Writing: drafting and revising prose or code comments, holding sentences in mind.",
+    "why": "Writing holds word order in mind, which separate changing pieces disrupt and continuous sound does not (rule 2); legato did not disrupt where staccato did. Ink gives more motion than Still, all of it continuous: voices change by slow crossfade, never as a new attack, and colour shifts move one note per step (rules 6 and 22: slow, expected change goes unnoticed and costs little). Evidence: strong for the mechanism on verbal memory; writing itself is studied only by extrapolation (the one paper on music while writing cannot anchor a rule)."
+  },
+  "frozen": false,
+  "program": "field",
+  "origin": "authored",
+  "parentIds": [],
+  "params": {
+    "bank/breathRate": 5,
+    "bank/breathe": 0.1,
+    "bank/bright": 900,
+    "bank/detune": 3,
+    "bank/drift": 0.45,
+    "bank/fade": 9,
+    "bank/level": -17,
+    "bank/octave": 1,
+    "bank/on": 1,
+    "bank/saw": 0.45,
+    "bank/swell": 0.18,
+    "bank/v1": 0,
+    "bank/v2": 4,
+    "bank/v3": 9,
+    "bank/v4": 11,
+    "bloom/attack": 0.012,
+    "bloom/bright": 0.4,
+    "bloom/decay": 4,
+    "bloom/every": 16,
+    "bloom/level": -22,
+    "bloom/octave": 2,
+    "bloom/on": 0,
+    "bloom/scale": 0,
+    "bloom/space": 0.6,
+    "bloom/span": 8,
+    "bloom/tone": 0.3,
+    "bloom/voices": 6,
+    "bloom/wander": 0.35,
+    "bpm": 60,
+    "breath/level": -40,
+    "breath/on": 1,
+    "breath/q": 18,
+    "drone/fifth": 0.25,
+    "drone/level": -27,
+    "drone/octave": 0,
+    "drone/on": 1,
+    "glow/bloom": 13,
+    "glow/level": -36,
+    "glow/octave": 2,
+    "glow/on": 1,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "lattice/attack": 0.006,
+    "lattice/bright": 0.35,
+    "lattice/decay": 0.7,
+    "lattice/density": 1,
+    "lattice/lag": 0,
+    "lattice/level": -24,
+    "lattice/octave": 1,
+    "lattice/on": 0,
+    "lattice/pattern": 0,
+    "lattice/rate": 2,
+    "lattice/space": 0.35,
+    "lattice/spread": 0.35,
+    "lattice/tone": 0.6,
+    "master/drive": 0.06,
+    "master/glue": 0.25,
+    "master/glueThreshold": -14,
+    "master/level": -9.2,
+    "motion/amount": 1,
+    "phase/on": 0,
+    "space/crossfeed": 0.2,
+    "space/damp": 4000,
+    "space/dubDiv": 1.5,
+    "space/dubFeedback": 0.35,
+    "space/dubMix": 0,
+    "space/dubTone": 2400,
+    "space/room": 0.4,
+    "space/roomT60": 4.5,
+    "space/width": 0.9,
+    "tonal/mode": 2,
+    "tonal/root": 38
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "bank/on": 0,
+      "drone/on": 0,
+      "breath/on": 0,
+      "glow/on": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "chord",
+          "set": {
+            "bank/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "drone",
+          "set": {
+            "drone/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "air",
+          "set": {
+            "breath/on": 1
+          },
+          "fadeBars": 32
+        },
+        {
+          "name": "harmonics",
+          "set": {
+            "glow/on": 1
+          },
+          "fadeBars": 32
+        }
+      ],
+      "fixed": 2,
+      "top": 4,
+      "foundationMinutes": 2,
+      "minutes": 8,
+      "wobble": 1,
+      "tide": {
+        "everyMinutes": [
+          26,
+          36
+        ],
+        "floor": 2
+      }
+    },
+    "sectionBars": 12,
+    "moves": {
+      "add": 0.1,
+      "drop": 0.08,
+      "vary": 0.4,
+      "drift": 0.27,
+      "shift": 0.1,
+      "rest": 0.05
+    },
+    "variations": {
+      "bank/v2": [
+        4,
+        5
+      ],
+      "bank/v3": [
+        9,
+        8
+      ],
+      "bank/v4": [
+        11,
+        14
+      ]
+    },
+    "drift": {
+      "bank/bright": [
+        760,
+        1050
+      ],
+      "glow/level": [
+        -39,
+        -34
+      ],
+      "breath/level": [
+        -43,
+        -38
+      ]
+    },
+    "driftRampBars": 16,
+    "shifts": {
+      "tonal/mode": [
+        1,
+        2
+      ]
+    },
+    "shiftRampBars": 32,
+    "minSecondsBetweenChanges": 60
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

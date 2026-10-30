@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 3,
+  "id": "night-road",
+  "name": "Night Road",
+  "tagline": "Tyres on a night road, an engine's low purr, a running acid line.",
+  "description": "The low rush of tyres on a night road and an engine's purr; the air moves with the acid line's slow sweep. A steady four-four, a bass rolling into each beat, sixteenth ticks, a single-note acid line under long sweeps, a warm pad underneath.",
+  "use": {
+    "name": "Sprint",
+    "for": "Short, timeboxed bursts: first drafts, fast output.",
+    "why": "The fastest tempo, for forward momentum, but it hits no harder than the rest: the drive comes from a bass rolling into each beat and the road moving with the music. The research puts the useful energising range at about 115–125 bpm and finds that faster can tip over, so Sprint sits just above it and is for short blocks, not whole sessions. It builds fastest."
+  },
+  "frozen": false,
+  "program": "deepwork",
+  "origin": "authored",
+  "parentIds": [
+    "deep-work"
+  ],
+  "params": {
+    "acid/accent": 0.2,
+    "acid/cutoff": 320,
+    "acid/decay": 0.2,
+    "acid/drive": 0.3,
+    "acid/dubSend": 0.2,
+    "acid/envMod": 1.6,
+    "acid/gate": 0.5,
+    "acid/ghost": 0.04,
+    "acid/level": -16,
+    "acid/mask": 19789,
+    "acid/motion": 0.06,
+    "acid/octave": 0,
+    "acid/on": 1,
+    "acid/pan": 0.05,
+    "acid/prob": 0.85,
+    "acid/res": 0.7,
+    "acid/slide": 0.2,
+    "acid/sweep": 1.4,
+    "acid/sweepBars": 64,
+    "acid/wave": 0,
+    "beta/chords": 0,
+    "beta/depth": 0,
+    "bpm": 128,
+    "clap/decay": 0.14,
+    "clap/level": -20,
+    "clap/mask": 4112,
+    "clap/on": 0,
+    "clap/pan": 0.05,
+    "clap/prob": 1,
+    "clap/tone": 1300,
+    "glass/decay": 3,
+    "glass/dubSend": 0.2,
+    "glass/every": 20,
+    "glass/level": -30,
+    "glass/octave": 2,
+    "glass/on": 0,
+    "glass/tone": 0.4,
+    "groove/humanize": 3,
+    "groove/swing": 0.03,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "hats/attack": 0.001,
+    "hats/bright": 7500,
+    "hats/decay": 0.024,
+    "hats/ghost": 0.45,
+    "hats/level": -21,
+    "hats/mask": 21845,
+    "hats/metal": 0.5,
+    "hats/on": 1,
+    "hats/pan": 0.12,
+    "hats/prob": 0.92,
+    "hats/spread": 0.1,
+    "hats/tune": 1,
+    "hats/velocity": 3,
+    "hum/level": -24.2,
+    "hum/on": 1,
+    "hum/rush": -30,
+    "hum/tone": 160,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "kick/attack": 0.0015,
+    "kick/click": 0.12,
+    "kick/decay": 0.24,
+    "kick/drive": 0.2,
+    "kick/drop": 2.5,
+    "kick/dropTime": 0.03,
+    "kick/level": -9,
+    "kick/mask": 4369,
+    "kick/on": 1,
+    "kick/pitch": 49,
+    "kick/prob": 1,
+    "kick/tone": 1500,
+    "light/level": -30,
+    "light/octave": 3,
+    "light/on": 0,
+    "light/swell": 9,
+    "light/tone": 0.3,
+    "master/drive": 0.15,
+    "master/glue": 0.35,
+    "master/glueThreshold": -12,
+    "master/level": -11.4,
+    "motion/amount": 1,
+    "noise/air": -41.4,
+    "noise/airFollow": 0.9,
+    "noise/colour": 1,
+    "noise/gust": 0.2,
+    "noise/level": -19.4,
+    "noise/on": 1,
+    "noise/pump": 0,
+    "ohat/bright": 7000,
+    "ohat/decay": 0.12,
+    "ohat/level": -27,
+    "ohat/mask": 17476,
+    "ohat/on": 1,
+    "ohat/pan": -0.15,
+    "ohat/prob": 0.5,
+    "pad/breath": 1,
+    "pad/bright": 550,
+    "pad/detune": 7,
+    "pad/drift": 0.6,
+    "pad/level": -17,
+    "pad/octave": 1,
+    "pad/on": 1,
+    "pad/shape": 0.4,
+    "parts/bright": 900,
+    "parts/detune": 4,
+    "parts/fade": 6,
+    "parts/inner1": 3,
+    "parts/inner2": 10,
+    "parts/level": -30,
+    "parts/low": 0,
+    "parts/octave": 1,
+    "parts/on": 0,
+    "parts/top": 19,
+    "perc/body": 0.2,
+    "perc/freq": 1100,
+    "perc/level": -14,
+    "perc/mask": 8320,
+    "perc/on": 0,
+    "perc/pan": -0.2,
+    "perc/prob": 0.25,
+    "perc/q": 12,
+    "perc/spread": 0.2,
+    "rain/density": 600,
+    "rain/level": -30,
+    "rain/on": 0,
+    "rain/tone": 2500,
+    "rain/wash": -8,
+    "sea/level": -30,
+    "sea/on": 0,
+    "sea/rate": 5.5,
+    "sea/tone": 900,
+    "sea/wash": -14,
+    "series/bloom": 14,
+    "series/level": -30,
+    "series/octave": 0,
+    "series/on": 0,
+    "series/seven": 0,
+    "series/tilt": 0.5,
+    "series/width": 0.4,
+    "space/crossfeed": 0.2,
+    "space/dubDiv": 0.75,
+    "space/dubFeedback": 0.5,
+    "space/dubMix": 0.25,
+    "space/dubTone": 2400,
+    "space/duck": 0.3,
+    "space/duckAttack": 0.003,
+    "space/duckRelease": 0.16,
+    "space/duckShape": 0,
+    "space/room": 0.1,
+    "space/roomT60": 1.2,
+    "space/width": 0.85,
+    "stab/cutoff": 900,
+    "stab/decay": 0.25,
+    "stab/detune": 8,
+    "stab/dubSend": 0.6,
+    "stab/envAmt": 1.5,
+    "stab/filterDecay": 0.12,
+    "stab/level": -9,
+    "stab/mask": 1088,
+    "stab/octave": 1,
+    "stab/on": 0,
+    "stab/prob": 0.15,
+    "stab/res": 0.3,
+    "sub/cutoff": 220,
+    "sub/decay": 0.18,
+    "sub/drive": 0.1,
+    "sub/ghost": 0,
+    "sub/glide": 0.02,
+    "sub/hold": 0,
+    "sub/level": -12,
+    "sub/mask": 34952,
+    "sub/motion": 0.12,
+    "sub/octave": -1,
+    "sub/on": 1,
+    "sub/prob": 0.55,
+    "tonal/chord": 0,
+    "tonal/root": 41,
+    "veil/body": -12,
+    "veil/breath": 0.25,
+    "veil/level": -30,
+    "veil/on": 0,
+    "veil/tilt": 0.5
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "noise/on": 0,
+      "pad/on": 0,
+      "kick/on": 0,
+      "sub/on": 0,
+      "hats/on": 0,
+      "acid/on": 0,
+      "hum/on": 0,
+      "ohat/on": 0,
+      "hats/ghost": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "road",
+          "set": {
+            "noise/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "pad",
+          "set": {
+            "pad/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "pulse",
+          "set": {
+            "kick/on": 1
+          },
+          "fadeBars": 12
+        },
+        {
+          "name": "bass",
+          "set": {
+            "sub/on": 1
+          },
+          "fadeBars": 12
+        },
+        {
+          "name": "ticks",
+          "set": {
+            "hats/on": 1
+          },
+          "fadeBars": 12
+        },
+        {
+          "name": "acid",
+          "set": {
+            "acid/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "engine",
+          "set": {
+            "hum/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "open hat",
+          "set": {
+            "ohat/on": 1
+          },
+          "fadeBars": 12
+        },
+        {
+          "name": "fills",
+          "set": {
+            "hats/ghost": 0.45
+          },
+          "fadeBars": 24
+        }
+      ],
+      "fixed": 5,
+      "top": 8,
+      "foundationMinutes": 1.5,
+      "minutes": 5,
+      "wobble": 1,
+      "tide": {
+        "everyMinutes": [
+          14,
+          20
+        ],
+        "floor": 4
+      }
+    },
+    "sectionBars": 32,
+    "moves": {
+      "add": 0.2,
+      "drop": 0.2,
+      "vary": 0.25,
+      "drift": 0.25,
+      "rest": 0.1
+    },
+    "variations": {
+      "acid/mask": [
+        19789,
+        21331,
+        18504
+      ],
+      "acid/sweepBars": [
+        64,
+        96,
+        128
+      ],
+      "sub/mask": [
+        34952,
+        2056,
+        2184
+      ],
+      "hats/mask": [
+        21845,
+        17476
+      ]
+    },
+    "drift": {
+      "acid/cutoff": [
+        260,
+        480
+      ],
+      "acid/res": [
+        0.65,
+        0.82
+      ],
+      "acid/envMod": [
+        1.3,
+        2.2
+      ],
+      "hats/decay": [
+        0.018,
+        0.03
+      ],
+      "hum/tone": [
+        130,
+        220
+      ],
+      "noise/colour": [
+        0.85,
+        1
+      ]
+    },
+    "driftRampBars": 16,
+    "minSecondsBetweenChanges": 40
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

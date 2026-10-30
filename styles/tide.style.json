@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 3,
+  "id": "tide",
+  "name": "Tide",
+  "tagline": "Drift · no beat: the whole bed breathes, slowly, in a vast space.",
+  "description": "No pulse. The chord, the drone and the air rise and fall together at a breathing pace, about five and a half times a minute: rising for two fifths of each breath, falling for three. A very long, dark room. The fewest changes of any style.",
+  "use": {
+    "name": "Recover",
+    "for": "Coming down after a block of effort, or between blocks: letting arousal fall.",
+    "why": "Tempo is the arousal lever (rule 29), and a full pause after rhythmic music dropped heart rate, blood pressure and breathing below baseline. Tide removes the pulse entirely and gives the bed one slow swell instead, so every layer shares one envelope and fuses into a single breathing sound (rule 11). The breathing pace itself is a design choice (heart rate does not lock to musical beats, rule 30), not a claimed entrainment. Evidence: moderate that removing tempo lowers arousal; untested as a recovery aid."
+  },
+  "frozen": false,
+  "program": "field",
+  "origin": "authored",
+  "parentIds": [],
+  "params": {
+    "bank/breathRate": 4.5,
+    "bank/breathe": 0.3,
+    "bank/bright": 600,
+    "bank/detune": 2.5,
+    "bank/drift": 0.3,
+    "bank/fade": 16,
+    "bank/level": -16,
+    "bank/octave": 1,
+    "bank/on": 1,
+    "bank/saw": 0.3,
+    "bank/swell": 0.1,
+    "bank/v1": 0,
+    "bank/v2": 4,
+    "bank/v3": 7,
+    "bank/v4": 11,
+    "bloom/attack": 0.012,
+    "bloom/bright": 0.4,
+    "bloom/decay": 4,
+    "bloom/every": 16,
+    "bloom/level": -22,
+    "bloom/octave": 2,
+    "bloom/on": 0,
+    "bloom/scale": 0,
+    "bloom/space": 0.6,
+    "bloom/span": 8,
+    "bloom/tone": 0.3,
+    "bloom/voices": 6,
+    "bloom/wander": 0.35,
+    "bpm": 50,
+    "breath/level": -38,
+    "breath/on": 1,
+    "breath/q": 14,
+    "drone/fifth": 0.3,
+    "drone/level": -24,
+    "drone/octave": 0,
+    "drone/on": 1,
+    "glow/bloom": 21,
+    "glow/level": -40,
+    "glow/octave": 2,
+    "glow/on": 1,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "lattice/attack": 0.006,
+    "lattice/bright": 0.35,
+    "lattice/decay": 0.7,
+    "lattice/density": 1,
+    "lattice/lag": 0,
+    "lattice/level": -24,
+    "lattice/octave": 1,
+    "lattice/on": 0,
+    "lattice/pattern": 0,
+    "lattice/rate": 2,
+    "lattice/space": 0.35,
+    "lattice/spread": 0.35,
+    "lattice/tone": 0.6,
+    "master/drive": 0.06,
+    "master/glue": 0.25,
+    "master/glueThreshold": -14,
+    "master/level": -10.2,
+    "motion/amount": 1,
+    "phase/on": 0,
+    "space/crossfeed": 0.2,
+    "space/damp": 3000,
+    "space/dubDiv": 1.5,
+    "space/dubFeedback": 0.35,
+    "space/dubMix": 0,
+    "space/dubTone": 2400,
+    "space/room": 0.55,
+    "space/roomT60": 8,
+    "space/width": 1,
+    "tonal/mode": 1,
+    "tonal/root": 38
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "drone/on": 0,
+      "bank/on": 0,
+      "breath/on": 0,
+      "glow/on": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "drone",
+          "set": {
+            "drone/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "chord",
+          "set": {
+            "bank/on": 1
+          },
+          "fadeBars": 20
+        },
+        {
+          "name": "air",
+          "set": {
+            "breath/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "harmonics",
+          "set": {
+            "glow/on": 1
+          },
+          "fadeBars": 24
+        }
+      ],
+      "fixed": 2,
+      "top": 4,
+      "foundationMinutes": 2.5,
+      "minutes": 8,
+      "wobble": 1,
+      "tide": null
+    },
+    "sectionBars": 12,
+    "moves": {
+      "add": 0.1,
+      "drop": 0.05,
+      "vary": 0.3,
+      "drift": 0.3,
+      "shift": 0.1,
+      "rest": 0.15
+    },
+    "variations": {
+      "bank/v3": [
+        7,
+        9
+      ],
+      "bank/v4": [
+        11,
+        14
+      ]
+    },
+    "drift": {
+      "bank/bright": [
+        500,
+        700
+      ],
+      "space/room": [
+        0.5,
+        0.6
+      ]
+    },
+    "driftRampBars": 16,
+    "shifts": {
+      "tonal/mode": [
+        1,
+        2
+      ]
+    },
+    "shiftRampBars": 32,
+    "minSecondsBetweenChanges": 120
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

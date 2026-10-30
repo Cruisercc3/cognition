@@ -1,0 +1,20 @@
+# dependencies & build output
+node_modules/
+out/
+dist/
+app/out/
+app/build/dsp-precompiled/
+
+# local data (sessions, bench, feedback, lab, calibration, generated styles)
+data/
+
+# renders
+renders/
+*.wav
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.env
+src/renderer/public/dsp/

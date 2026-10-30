@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 3,
+  "id": "build",
+  "name": "Build",
+  "tagline": "Lattice · a pulse made of tone: two lines, one figure, sliding out of phase.",
+  "description": "No drums. Two marimba-like lines play the same twelve-step figure in eighths; every so often the second slides one step out of phase over about a minute and locks there, so the same notes make a new interlocking pattern. Over a held chord and a drone, in a medium room with a soft dotted echo. After Reich's phase pieces.",
+  "use": {
+    "name": "Build",
+    "for": "Making things: systems, diagrams, structure, code architecture; spatial and procedural work.",
+    "why": "The disruption from changing pieces is verbal: the same effect on spatial memory was reported once and failed to replicate, so building and visual work can carry a pulse of changing notes that reading cannot. Regular patterns do not capture attention and disrupt less than random ones (rule 21). Lattice carries its pulse in tone instead of drums, and its large change, the phase shift, is lawful and slow: the ear can learn when it comes (rule 6). Evidence: moderate for the mechanisms; no controlled study of sound during programming or design exists."
+  },
+  "frozen": false,
+  "program": "field",
+  "origin": "authored",
+  "parentIds": [],
+  "params": {
+    "bank/breathRate": 5.5,
+    "bank/breathe": 0,
+    "bank/bright": 1000,
+    "bank/detune": 3.5,
+    "bank/drift": 0.4,
+    "bank/fade": 8,
+    "bank/level": -21,
+    "bank/octave": 1,
+    "bank/on": 1,
+    "bank/saw": 0.45,
+    "bank/swell": 0.15,
+    "bank/v1": 0,
+    "bank/v2": 4,
+    "bank/v3": 8,
+    "bank/v4": 11,
+    "bloom/attack": 0.012,
+    "bloom/bright": 0.4,
+    "bloom/decay": 4,
+    "bloom/every": 16,
+    "bloom/level": -22,
+    "bloom/octave": 2,
+    "bloom/on": 0,
+    "bloom/scale": 0,
+    "bloom/space": 0.6,
+    "bloom/span": 8,
+    "bloom/tone": 0.3,
+    "bloom/voices": 6,
+    "bloom/wander": 0.35,
+    "bpm": 100,
+    "breath/level": -36,
+    "breath/on": 0,
+    "breath/q": 18,
+    "drone/fifth": 0.2,
+    "drone/level": -28,
+    "drone/octave": 0,
+    "drone/on": 1,
+    "glow/bloom": 13,
+    "glow/level": -38,
+    "glow/octave": 2,
+    "glow/on": 1,
+    "guard/crest": 14,
+    "guard/maxBrightness": -14,
+    "guard/maxLoudness": -26,
+    "keepalive/level": -64,
+    "keepalive/on": 1,
+    "lattice/attack": 0.006,
+    "lattice/bright": 0.3,
+    "lattice/decay": 0.55,
+    "lattice/density": 0.92,
+    "lattice/lag": 3,
+    "lattice/level": -19,
+    "lattice/octave": 2,
+    "lattice/on": 1,
+    "lattice/pattern": 0,
+    "lattice/rate": 2,
+    "lattice/space": 0.3,
+    "lattice/spread": 0.4,
+    "lattice/tone": 0.7,
+    "master/drive": 0.06,
+    "master/glue": 0.25,
+    "master/glueThreshold": -14,
+    "master/level": -9.7,
+    "motion/amount": 1,
+    "phase/on": 1,
+    "space/crossfeed": 0.2,
+    "space/damp": 5500,
+    "space/dubDiv": 0.75,
+    "space/dubFeedback": 0.3,
+    "space/dubMix": 0.12,
+    "space/dubTone": 2200,
+    "space/room": 0.3,
+    "space/roomT60": 2.6,
+    "space/width": 0.9,
+    "tonal/mode": 3,
+    "tonal/root": 38
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "bank/on": 0,
+      "drone/on": 0,
+      "lattice/on": 0,
+      "phase/on": 0,
+      "glow/on": 0
+    },
+    "build": {
+      "rungs": [
+        {
+          "name": "chord",
+          "set": {
+            "bank/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "drone",
+          "set": {
+            "drone/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "figure",
+          "set": {
+            "lattice/on": 1
+          },
+          "fadeBars": 16
+        },
+        {
+          "name": "phase",
+          "set": {
+            "phase/on": 1
+          },
+          "fadeBars": 24
+        },
+        {
+          "name": "harmonics",
+          "set": {
+            "glow/on": 1
+          },
+          "fadeBars": 24
+        }
+      ],
+      "fixed": 2,
+      "top": 5,
+      "foundationMinutes": 1.5,
+      "minutes": 6,
+      "wobble": 1,
+      "tide": {
+        "everyMinutes": [
+          20,
+          30
+        ],
+        "floor": 2
+      }
+    },
+    "sectionBars": 16,
+    "moves": {
+      "add": 0.1,
+      "drop": 0.05,
+      "vary": 0.15,
+      "drift": 0.25,
+      "shift": 0.35,
+      "rest": 0.1
+    },
+    "variations": {
+      "bank/v3": [
+        8,
+        9
+      ]
+    },
+    "drift": {
+      "lattice/decay": [
+        0.45,
+        0.7
+      ],
+      "lattice/density": [
+        0.85,
+        1
+      ],
+      "bank/bright": [
+        850,
+        1200
+      ]
+    },
+    "driftRampBars": 16,
+    "shifts": {
+      "tonal/mode": [
+        2,
+        3,
+        4
+      ],
+      "lattice/lag": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    "shiftRampBars": 24,
+    "minSecondsBetweenChanges": 40
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

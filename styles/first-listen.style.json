@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "id": "first-listen",
+  "name": "First Listen",
+  "tagline": "Reference — the first version, frozen as you heard it.",
+  "description": "The Deep Work sound exactly as it was at the First Listen on 13 Oct 2026 (git tag first-listen): the v1 engine and style, frozen as a reference point for A/B. It plays but is never edited; the live family evolves from it.",
+  "frozen": true,
+  "program": "firstlisten",
+  "origin": "authored",
+  "parentIds": [
+    "deep-work@first-listen"
+  ],
+  "params": {
+    "bpm": 120,
+    "groove/swing": 0.08,
+    "tonal/root": 41,
+    "tonal/chord": 0,
+    "kick/mask": 4369,
+    "kick/prob": 1,
+    "kick/level": -8,
+    "kick/pitch": 45,
+    "kick/drop": 2.2,
+    "kick/dropTime": 0.025,
+    "kick/attack": 0.002,
+    "kick/decay": 0.32,
+    "kick/tone": 900,
+    "sub/mask": 2056,
+    "sub/prob": 0.55,
+    "sub/ghost": 0.04,
+    "sub/level": -6,
+    "sub/decay": 0.22,
+    "sub/cutoff": 220,
+    "sub/motion": 0.25,
+    "sub/glide": 0.02,
+    "sub/octave": -1,
+    "hats/mask": 17476,
+    "hats/prob": 0.92,
+    "hats/ghost": 0.12,
+    "hats/level": -10,
+    "hats/bright": 7000,
+    "hats/decay": 0.03,
+    "hats/attack": 0.0006,
+    "hats/pan": 0.15,
+    "perc/mask": 8320,
+    "perc/prob": 0.1,
+    "perc/level": -12,
+    "perc/freq": 1100,
+    "perc/q": 12,
+    "perc/pan": -0.2,
+    "stab/mask": 1088,
+    "stab/prob": 0.08,
+    "stab/level": -6,
+    "stab/cutoff": 900,
+    "stab/envAmt": 1.5,
+    "stab/filterDecay": 0.12,
+    "stab/decay": 0.25,
+    "stab/octave": 1,
+    "stab/dubSend": 0.6,
+    "pad/level": -20,
+    "pad/bright": 650,
+    "pad/drift": 0.6,
+    "pad/detune": 7,
+    "pad/octave": 1,
+    "beta/depth": 0,
+    "noise/level": -60,
+    "noise/colour": 0.5,
+    "space/room": 0.1,
+    "space/roomT60": 0.9,
+    "space/dubFeedback": 0.55,
+    "space/dubDiv": 0.75,
+    "space/dubTone": 2200,
+    "space/dubMix": 0.35,
+    "space/width": 0.8,
+    "space/crossfeed": 0.2,
+    "master/level": -12,
+    "guard/crest": 14,
+    "guard/maxLoudness": -26,
+    "guard/maxBrightness": -14,
+    "keepalive/level": -64,
+    "keepalive/on": 1
+  },
+  "macros": {
+    "pulse": 0.5,
+    "intensity": 0.5,
+    "warmth": 0.5,
+    "density": 0.5,
+    "space": 0.5,
+    "tonality": 0.5
+  },
+  "arrangement": {
+    "start": {
+      "pad/on": 0,
+      "noise/on": 0,
+      "sub/on": 0,
+      "kick/on": 0,
+      "hats/on": 0,
+      "perc/on": 0,
+      "stab/on": 0
+    },
+    "intro": [
+      {
+        "atBar": 1,
+        "rampBars": 16,
+        "set": {
+          "pad/on": 1,
+          "noise/on": 1
+        }
+      },
+      {
+        "atBar": 12,
+        "rampBars": 12,
+        "set": {
+          "sub/on": 1
+        }
+      },
+      {
+        "atBar": 28,
+        "rampBars": 16,
+        "set": {
+          "kick/on": 1
+        }
+      },
+      {
+        "atBar": 48,
+        "rampBars": 16,
+        "set": {
+          "hats/on": 1
+        }
+      },
+      {
+        "atBar": 72,
+        "rampBars": 8,
+        "set": {
+          "perc/on": 1,
+          "stab/on": 1
+        }
+      }
+    ],
+    "reshuffleMinutes": 8,
+    "variations": {
+      "hats/mask": [
+        17476,
+        21845,
+        17988
+      ],
+      "sub/mask": [
+        2056,
+        2184,
+        2088,
+        34952
+      ],
+      "perc/mask": [
+        8320,
+        4160,
+        32896
+      ],
+      "stab/mask": [
+        1088,
+        1092,
+        4160
+      ]
+    },
+    "drift": {
+      "pad/bright": [
+        480,
+        900
+      ],
+      "stab/cutoff": [
+        700,
+        1200
+      ],
+      "hats/bright": [
+        6000,
+        8500
+      ],
+      "groove/swing": [
+        0.04,
+        0.12
+      ]
+    },
+    "driftRampBars": 16,
+    "budget": {
+      "maxDiscretePerReshuffle": 1,
+      "maxDriftPerReshuffle": 1,
+      "minSecondsBetweenChanges": 120
+    }
+  },
+  "guard": {
+    "ceilingDb": -18,
+    "maxMasterDb": -6,
+    "maxKickDb": -4,
+    "maxBassDb": -3,
+    "maxHatDb": -4,
+    "maxBrightnessDb": -12,
+    "maxWidth": 1
+  },
+  "safety": {
+    "amRateMinHz": 8,
+    "amRateMaxHz": 20,
+    "maxAmDepth": 0.5
+  },
+  "snapshots": []
+}

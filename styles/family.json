@@ -1,0 +1,50 @@
+{
+  "order": [
+    "shoreline",
+    "rainfall",
+    "low-light",
+    "dub-chamber",
+    "quiet-room",
+    "deep-work",
+    "acid-drift",
+    "daylight",
+    "machine-room",
+    "night-road"
+  ],
+  "start": "deep-work",
+  "roamMinutes": [
+    10,
+    18
+  ],
+  "morphBars": 32,
+  "studies": [
+    "unbroken",
+    "middle-distance",
+    "overtones",
+    "flutter",
+    "shelter"
+  ],
+  "reference": "first-listen",
+  "lines": [
+    {
+      "id": "field",
+      "name": "Field",
+      "about": "beatless and tonal worlds: Drift, Bloom, Lattice",
+      "order": [
+        "tide",
+        "still",
+        "ink",
+        "garden",
+        "wander",
+        "build",
+        "run"
+      ],
+      "start": "still",
+      "roamMinutes": [
+        12,
+        20
+      ],
+      "morphBars": 48
+    }
+  ]
+}
