@@ -238,10 +238,20 @@ export class SessionController {
 
   onDevices(devices: OutputDevice[]): void {
     this.devices = devices;
-    // First run: pin the Realtek output (bypasses FxSound, per the listening-chain decision).
     if (!this.settings.sinkId) {
-      const realtek = devices.find((d) => /realtek/i.test(d.label) && !/fxsound/i.test(d.label));
-      if (realtek) this.setSink(realtek.deviceId, realtek.label);
+      // No output chosen: the system default plays, whatever the machine. Only where FxSound
+      // is installed, pin the Realtek output so FxSound stays out of the path.
+      if (devices.some((d) => /fxsound/i.test(d.label))) {
+        const realtek = devices.find((d) => /realtek/i.test(d.label) && !/fxsound/i.test(d.label));
+        if (realtek) this.setSink(realtek.deviceId, realtek.label);
+      }
+    } else if (!this.playing && devices.length && !devices.some((d) => d.deviceId === this.settings.sinkId)) {
+      // The saved output is not on this machine (a copied settings file, a removed device):
+      // the same device under a new id if there is one, otherwise the system default.
+      const label = this.settings.sinkLabel;
+      const same = label ? devices.find((d) => d.label === label) : undefined;
+      log('app', { type: 'sink.missing', sinkId: this.settings.sinkId, label });
+      this.setSink(same?.deviceId ?? '', same?.label ?? '');
     }
     this.deps.onChange();
   }
@@ -444,7 +454,7 @@ export class SessionController {
         this.applyStyleChange(SLIDER_RAMP_SEC, 'manual.pulse');
         break;
       case 'setVolume':
-        if (!this.settings.sinkId) break;
+        // '' is the system default output: it keeps a trim of its own
         this.settings.volumeDbByDevice[this.settings.sinkId] = Math.min(6, Math.max(-30, cmd.value));
         saveSettings(this.settings);
         this.applyStyleChange(SLIDER_RAMP_SEC, 'manual.volume');

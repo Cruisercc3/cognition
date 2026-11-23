@@ -29,17 +29,22 @@ export interface Settings {
   volumeDbByDevice: Record<string, number>;
   /** 1 = full ramp-in; 0 = start at full texture (useful while tuning). */
   introScale: number;
+  /** Which set of defaults wrote this file (see loadSettings). */
+  defaultsVersion: number;
   reference: ReferenceRecord;
 }
 
 const DEFAULTS: Settings = {
-  styleId: 'deep-work',
-  selection: 'auto',
-  pulse: 0.5,
+  // A first run opens on Low Light at full texture, a touch toward Techno: sound from the
+  // first second. Auto and Gentle start are one click away on the main screen.
+  styleId: 'low-light',
+  selection: 'low-light',
+  pulse: 0.57,
   sinkId: '',
   sinkLabel: '',
   volumeDbByDevice: {},
-  introScale: 1,
+  introScale: 0,
+  defaultsVersion: 2,
   reference: {
     endelEdition: 'Plastikman: Deeper Focus — Remastered & Reduced (2026)',
     slider: 'app default',
@@ -55,7 +60,17 @@ const file = path.join(dataDir, 'settings.json');
 export function loadSettings(): Settings {
   try {
     const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
-    return { ...DEFAULTS, ...raw, reference: { ...DEFAULTS.reference, ...(raw.reference ?? {}) } };
+    const s: Settings = { ...DEFAULTS, ...raw, reference: { ...DEFAULTS.reference, ...(raw.reference ?? {}) } };
+    // A file saved by the first defaults (Auto, Gentle start, as authored) and never changed
+    // moves to the current ones; anything the listener set is kept.
+    if (raw.defaultsVersion === undefined && raw.selection === 'auto' && raw.introScale === 1 && raw.pulse === 0.5) {
+      s.styleId = DEFAULTS.styleId;
+      s.selection = DEFAULTS.selection;
+      s.pulse = DEFAULTS.pulse;
+      s.introScale = DEFAULTS.introScale;
+    }
+    s.defaultsVersion = DEFAULTS.defaultsVersion;
+    return s;
   } catch {
     return structuredClone(DEFAULTS);
   }

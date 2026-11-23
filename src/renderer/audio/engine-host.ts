@@ -163,9 +163,16 @@ export class AudioHost {
     if (!ok) throw new Error(`AudioContext did not resume (state ${this.ctx.state})`);
     // Chromium: setSinkId on a suspended context wedges resume(), so sink changes made
     // while suspended are applied here, after resume and before the fade-in.
+    // A sink this machine does not have must not leave the session silent: the gain is
+    // still at zero here, so falling back to the current output is safe.
     if (this.pendingSink !== null && this.ctx.setSinkId) {
-      await this.ctx.setSinkId(this.pendingSink);
+      const sink = this.pendingSink;
       this.pendingSink = null;
+      try {
+        await this.ctx.setSinkId(sink);
+      } catch (err) {
+        console.warn(`output ${sink} unavailable, using the current output: ${String(err)}`);
+      }
     }
     this.playing = true;
     if (this.engineAudible) this.fadeTo(1, 1.5);

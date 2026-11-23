@@ -63,7 +63,7 @@ export function SetupView({ status }: Props) {
         </div>
       </Card>
 
-      <Card title="Output" hint="Pinned to Realtek so FxSound stays out of the path. Changing device stops playback (never jumps devices at level).">
+      <Card title="Output" hint="System default unless you pick one (where FxSound is installed, Realtek is pinned to keep it out of the path). Changing device stops playback (never jumps devices at level).">
         <select
           value={status.sinkId}
           onChange={(e) => send({ type: 'setSink', sinkId: e.target.value })}

@@ -53,14 +53,16 @@ The starting reference was the character of Endel's *Deeper Focus* with Plastikm
 
 ## Run it
 
-You need Windows, Node.js 22 or newer and npm.
+You need Windows, Node.js 22.18 or newer and npm.
+
+Double-click `cognition.cmd`. The first run installs the dependencies and builds, which takes a few minutes; after a `git pull` it rebuilds on its own. Or by hand:
 
 ```bash
-npm install
+npm ci
 npm run build
 npm start
 ```
 
-The panel opens, and closing it keeps the app in the tray. On first run it picks a Realtek output if there is one, otherwise your default device. You can change that in Studio, under Setup. `npm test`, `npm run typecheck` and `npm run selftest` run the checks.
+The panel opens, and closing it keeps the app in the tray. Press Play: it opens on Low Light at full texture, so there is sound from the first second. Auto and Gentle start (each variation building up from nothing over several minutes) are on the main screen. It plays through your default output device; you can change that in Studio, under Setup. `npm test`, `npm run typecheck` and `npm run selftest` run the checks.
 
 This repository is a snapshot of the code as of 2026-10-30. The working repository is private.

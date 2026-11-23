@@ -5,6 +5,9 @@
   "description": "Personal autonomous generative sound engine for deep work and cognitive states",
   "main": "./out/main/index.js",
   "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "dev": "electron-vite dev",
     "build": "npm run dsp && electron-vite build",
