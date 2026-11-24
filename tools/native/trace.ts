@@ -13,6 +13,7 @@ import { fullOwned } from '../../src/shared/conductor/arranger.ts';
 const [styleId = 'low-light', secs = '20', outDir = path.join(repoRoot, 'renders', 'native')] = process.argv.slice(2);
 const seconds = Number(secs);
 const style = loadStyleFile(path.join(repoRoot, 'styles', `${styleId}.style.json`));
+if (style.program === 'firstlisten') throw new Error('trace a live style');
 const proc = await createOffline(await compileDsp(style.program));
 
 let block = 0;
