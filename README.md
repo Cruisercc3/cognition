@@ -33,6 +33,10 @@ flowchart LR
   audio -. "bit-identical" .- render
 ```
 
+## Computation
+
+Synthesising every sample live is expensive: the app took about 72% of a CPU core and 334 MB on my desktop. I've cut that to about 50% and 206 MB with no audible change. Then I measured the options: a native engine is 1.6x faster with identical output, the engine wastes up to two thirds of its time, and plain playback costs under 1% of a core. That led me to the next step. The calculating has to move off the listening machine, either streamed from a server or rendered ahead as stems the device only mixes, the way Endel works. The reasoning and the numbers are in [`docs/computation.md`](docs/computation.md).
+
 ## Status
 
 Working on my machine as of 30 October 2026: the ten variations, the five Deep Work studies, the seven Field worlds, Auto and the Studio. The typecheck is clean, the self-test passes, and all 290 tests pass, though the ones that render audio take about 15 minutes. It's a personal tool, tuned for my own listening, and I've only run it on Windows.
