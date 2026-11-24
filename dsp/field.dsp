@@ -47,7 +47,7 @@ lt    = latchTrig(commit, bt, imm);
 ls    = latchState(commit, bt, imm);
 
 D(x) = latched(lt, x);
-C(x) = ramped(lt, rampSec, x);
+C(x) = rampTo(lt, rampSec, x);
 
 SR = ma.SR;
 barPos = bi + ph;             // continuous position in bars
@@ -146,7 +146,7 @@ with {
 bkKey(d) = root + 12 * bkOct + semisOf(d);
 bkV(d, k, pn, dd) = heldVoice(bkKey(d), k, pn, dd, bkFade, bkDetune, bkSaw, bkSwell);
 bkFc  = min(12000.0, bkBright * pow(2.0, bkDrift * motion * drift2(seed, 610, 41.0, 127.0)));
-bankG = db2lin(bkLevel) * bankGate * bkBreath * 0.85;
+bankG = dbLin(bkLevel) * bankGate * bkBreath * 0.85;
 bankS = (bkV(bkV1, 600, -0.45, 1.0), bkV(bkV2, 602, 0.35, -0.8), bkV(bkV3, 604, -0.25, 0.6), bkV(bkV4, 606, 0.55, -1.0))
         :> (fi.lowpass(2, bkFc) : *(bankG)), (fi.lowpass(2, bkFc) : *(bankG));
 
@@ -165,7 +165,7 @@ drFlip = ((+(drChg) ~ _) % 2) > 0.5;
 drSlot(f) = sineTab(phasor(f)) + sineTab(phasor(f * 2.0)) * 0.35 + sineTab(phasor(f * 3.0)) * 0.18 * drFifth;
 drX    = drFlip : si.smooth(ba.tau2pole(bkFade * 0.3));
 droneM = (drSlot(midiHz(drKey : ba.sAndH(1 - drFlip))) * (1.0 - drX) + drSlot(midiHz(drKey : ba.sAndH(drFlip))) * drX)
-         * (1.0 + 0.15 * W(630, 29.0)) * db2lin(drLevel) * droneGate * bkBreath * 1.4;
+         * (1.0 + 0.15 * W(630, 29.0)) * dbLin(drLevel) * droneGate * bkBreath * 1.4;
 
 //===================================================================================
 // Glow — the root's harmonic series far above (root, fifth, octave, twelfth: consonant in
@@ -184,7 +184,7 @@ with {
   w = 0.5 + 0.5 * W(k, gwBloom * (0.7 + 0.6 * ma.frac(n * 0.381966)));
   a = wt * w * w;
 };
-glowG = db2lin(gwLevel) * glowGate * 1.7;
+glowG = dbLin(gwLevel) * glowGate * 1.7;
 glowS = (gwPart(1.0, 620, 1.0, -0.45), gwPart(1.5, 622, 0.7, 0.4), gwPart(2.0, 624, 0.55, -0.15), gwPart(3.0, 626, 0.35, 0.55))
         :> (*(glowG), *(glowG));
 
@@ -202,7 +202,7 @@ brRoot  = nentry("h:tonal/root[unit:midi]", 38, 24, 60, 1);
 brF(i) = ba.midikey2hz(brRoot + 12 + ba.selectn(5, i, 0, 7, 12, 19, 24));
 brSide(b) = sum(i, 5, src : fi.resonbp(brF(i), brQ, 1.0) : *(1.0 - 0.12 * i) : *(1.0 + 0.6 * W(b + 2 + i, 11.0 + i * 1.7))) * 8.5
 with { src = wnoise(seed, b) : no.pink_filter; };
-breathG = db2lin(brLevel) * breathGate * bkBreath;
+breathG = dbLin(brLevel) * breathGate * bkBreath;
 breathL = brSide(640) * breathG;
 breathR = brSide(660) * breathG;
 
@@ -272,7 +272,7 @@ with {
   vel  = (0.55 + 0.45 * u01(seed, k + 3)) : ba.sAndH(trig);
 };
 
-bloomG = db2lin(blLevel) * bloomGate * 1.4;
+bloomG = dbLin(blLevel) * bloomGate * 1.4;
 bloomS = (bloomVoice(0), bloomVoice(1), bloomVoice(2), bloomVoice(3), bloomVoice(4), bloomVoice(5)) :> (*(bloomG), *(bloomG));
 
 //===================================================================================
@@ -321,7 +321,7 @@ with {
   with { tj = t * (rr == j); };
 };
 
-latticeG = db2lin(ltLevel) * 1.4;
+latticeG = dbLin(ltLevel) * 1.4;
 latticeS = pan(0.0 - ltSpread, line(ltSteps, 740) * latticeGate * latticeG);
 phaseS   = pan(ltSpread, line(ltSteps - ltLag, 760) * phaseGate * latticeG);
 
@@ -368,7 +368,7 @@ floorDb    = C(hslider("h:keepalive/level[unit:dBFS]", -64, -90, -50, 0.1));
 floorOn    = C(nentry("h:keepalive/on", 1, 0, 1, 1));
 
 chain = (mixL, mixR) : msWidth(width) : xfeed(crossfeed) : bus(glue, glueThresh, tape)
-        : (*(db2lin(master)), *(db2lin(master)))
+        : (*(dbLin(master)), *(dbLin(master)))
         : guardStage(maxLoudDb, maxBright) : limiter(crestDb, ceilDb)
         : (+(floorTone(floorDb, floorOn)), +(floorTone(floorDb, floorOn)));
 

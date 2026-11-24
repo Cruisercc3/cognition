@@ -134,8 +134,40 @@ with {
   };
 };
 
+// The same contract as ramped, at a fraction of the cost: the live engines carry a few
+// hundred continuous parameters, and ramped divides twice a sample for each. Here the
+// step per sample is worked out once, on the latch (the ramp length is shared and read
+// once per block), and the value walks by addition until it would pass the target, where
+// it takes the target exactly. State: tg = target, inc = step per sample, v = value.
+// ramped stays as it is for the frozen First Listen engine, whose output is pinned.
+rampTo(lt, rampSec, x) = (step ~ (_, _, _)) : (!, !, _)
+with {
+  n    = rampSec * ma.SR;
+  rate = select2(n >= 1.0, 1.0, 1.0 / max(1.0, n));   // share of the distance per sample
+  step(tg, inc, v) = tg2, inc2, v2
+  with {
+    changed = (lt > 0) & ((x != tg) | (impulse > 0));
+    tg2  = select2(changed, tg, x);
+    inc2 = select2(changed, inc, (x - v) * select2(impulse, rate, 1.0));
+    nxt  = v + inc2;
+    v2   = select2((tg2 - nxt) * inc2 > 0.0, tg2, nxt);
+  };
+};
+
 //------------------------------------------------------------------------------------
 // Level helpers
 //------------------------------------------------------------------------------------
 
 db2lin(db) = pow(10.0, db / 20.0);
+
+// The same from a table (-200..+56 dB in steps of 1/64 dB, read with linear interpolation;
+// within 1e-6 of the exact value): the live engines turn dozens of moving levels into
+// gains every sample, and pow() per sample for each was a large share of their cost.
+dbLin(db) = rdtable(DBN + 1, tab, i) * (1.0 - f) + rdtable(DBN + 1, tab, i + 1) * f
+with {
+  DBN = 16384;
+  tab = pow(10.0, (float(ba.time) / 64.0 - 200.0) / 20.0);
+  p   = max(0.0, min(float(DBN - 1), (db + 200.0) * 64.0));
+  i   = int(p);
+  f   = p - float(i);
+};

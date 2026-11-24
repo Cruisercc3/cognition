@@ -97,7 +97,7 @@ guardStage(maxLoudDb, maxBright, l, r) = l2, r2
 with {
   st   = lin2db(msOf(l, r, 1.5));
   grDb = min(0.0, maxLoudDb - st) : si.smooth(ba.tau2pole(2.0));
-  g    = db2lin(grDb);
+  g    = dbLin(grDb);
   hf   = (((l : fi.highpass(2, 4000)) ^ 2 + (r : fi.highpass(2, 4000)) ^ 2) * 0.5) : si.smooth(ba.tau2pole(1.5));
   ratio = lin2db(hf) - lin2db(msOf(l, r, 1.5) + 1.0e-12);
   cut  = min(0.0, maxBright - ratio) : max(-18.0) : si.smooth(ba.tau2pole(1.0));
@@ -113,7 +113,7 @@ with {
   st    = lin2db(msOf(l, r, 1.5));
   cdb   = min(max(st + crestDb, -50.0), ceilDb);
   peak  = max(abs(l), abs(r)) : ba.slidingMax(LA, LA);
-  gt    = min(1.0, db2lin(cdb) / max(peak, 1.0e-9));
+  gt    = min(1.0, dbLin(cdb) / max(peak, 1.0e-9));
   gmin  = gt : ba.slidingMin(LA, LA);
   ac    = 1.0 - exp(-1.0 / (0.0015 * ma.SR));
   rc    = 1.0 - exp(-1.0 / (0.25 * ma.SR));
@@ -121,4 +121,4 @@ with {
 };
 
 // The sub-audible keep-alive tone (18 Hz), added after everything else.
-floorTone(floorDb, on) = sin(2.0 * ma.PI * phasor(18.0)) * db2lin(floorDb + 3.0103) * on;
+floorTone(floorDb, on) = sin(2.0 * ma.PI * phasor(18.0)) * dbLin(floorDb + 3.0103) * on;

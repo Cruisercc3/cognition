@@ -2,7 +2,8 @@
 //
 // Windows
 //  * audio — hidden, lives with the app, backgroundThrottling off. Owns the AudioContext.
-//  * panel — the control panel; closing it hides it (tray keeps the app alive).
+//  * panel — the control panel; closing it closes its window (the tray keeps the app alive)
+//    and showing it again makes a new one.
 //
 // Renderer files are served over a privileged custom scheme (cog://app/...) so fetch()
 // works for the precompiled DSP and each page gets its own strict CSP.
@@ -43,6 +44,10 @@ function cspFor(pathname: string, dev: boolean): string {
     .replace("default-src 'self'", `default-src 'self' ${u.origin} ws://${u.host}`)
     .replace("connect-src 'self'", `connect-src 'self' ${u.origin} ws://${u.host}`);
 }
+
+// The panel is a small, mostly static page: drawing it in software costs next to nothing
+// and saves the GPU process's memory (about 110 MB less across the app's processes).
+app.disableHardwareAcceleration();
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'cog', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }
@@ -133,7 +138,10 @@ function pushStatus(): void {
   if (statusTimer) return;
   statusTimer = setTimeout(() => {
     statusTimer = null;
-    if (controller && panelWin && !panelWin.isDestroyed()) panelWin.webContents.send('status:update', controller.status(hotkeys));
+    // nothing to draw while the panel is closed or minimised
+    if (controller && panelWin && !panelWin.isDestroyed() && panelWin.isVisible() && !panelWin.isMinimized()) {
+      panelWin.webContents.send('status:update', controller.status(hotkeys));
+    }
     updateTray();
   }, 50);
 }
@@ -187,12 +195,14 @@ function createPanelWindow(): BrowserWindow {
   win.webContents.on('console-message', (e) => {
     if (e.level === 'error') consoleErrors.push(`[panel:error] ${e.message}`);
   });
-  win.on('close', (e) => {
-    if (!quitting && !SELFTEST) {
-      e.preventDefault();
-      win.hide();
-    }
+  // Closing the panel closes its window for real (the app lives on in the tray with the
+  // hidden audio window): its renderer process and memory go with it. showPanel makes a
+  // new one.
+  win.on('closed', () => {
+    if (panelWin === win) panelWin = null;
   });
+  win.on('restore', pushStatus);
+  win.on('show', pushStatus);
   win.webContents.on('did-finish-load', () => {
     pushStatus();
     if (SHOTS) void captureTabs(win);
@@ -318,11 +328,18 @@ async function runE2E(): Promise<void> {
 }
 
 function showPanel(focus?: string): void {
-  if (!panelWin) return;
+  if (!panelWin || panelWin.isDestroyed()) {
+    const win = createPanelWindow();
+    panelWin = win;
+    // a new page takes a moment to mount before it can be told where to look
+    if (focus) win.webContents.once('did-finish-load', () => setTimeout(() => !win.isDestroyed() && win.webContents.send('panel:focus', focus), 300));
+    return;
+  }
   if (panelWin.isMinimized()) panelWin.restore();
   panelWin.show();
   panelWin.focus();
   if (focus) panelWin.webContents.send('panel:focus', focus);
+  pushStatus();
 }
 
 function updateTray(): void {

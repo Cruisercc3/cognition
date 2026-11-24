@@ -48,7 +48,7 @@ lt    = latchTrig(commit, bt, imm);
 ls    = latchState(commit, bt, imm);
 
 D(x) = latched(lt, x);
-C(x) = ramped(lt, rampSec, x);
+C(x) = rampTo(lt, rampSec, x);
 
 SR = ma.SR;
 TWO_PI = 2.0 * ma.PI;
@@ -90,7 +90,7 @@ onPattern(mask) = bit(mask, stepIdx) : ba.sAndH(stepTrig);
 // Delay a hit by a random 0..humanize ms (held per step; never crosses into the next step).
 late(j, trig) = trig : de.delay(1024, int(stepRand(j) * humanize * 0.001 * SR));
 // Random per-step level cut of up to `db` (velocity variation).
-vel(j, db) = db2lin(0.0 - db * stepRand(j));
+vel(j, db) = dbLin(0.0 - db * stepRand(j));
 
 // Samples since the last trigger, and whether a trigger ever happened.
 tsince(trig) = (\(c).(select2(trig > 0, min(c + 1.0, 1.0e12), 0.0))) ~ _;
@@ -198,7 +198,7 @@ kT    = tsince(kHit);
 kFreq = kPitch * (1.0 + kDrop * exp(0.0 - kT / max(1.0, kDropT * SR)));
 kBody = sin(TWO_PI * phasorReset(kHit, kFreq)) * envAD(kHit, kAtt, kDec);
 kClk  = (wnoise(seed, 12) : fi.highpass(2, 1800) : fi.lowpass(1, 9000)) * envAD(kHit, 0.0001, 0.0035);
-kick  = (kBody + kClk * kClick * 0.6) : drive(kDrive) : fi.lowpass(2, kTone) : *(db2lin(kLevel) * kickGate);
+kick  = (kBody + kClk * kClick * 0.6) : drive(kDrive) : fi.lowpass(2, kTone) : *(dbLin(kLevel) * kickGate);
 
 // Kick-keyed duck: the bass, acid, chords, pad and bed make room for each kick. `duckShape`
 // blends the kick's own envelope into a smooth breath locked to the beat (lowest on the
@@ -236,7 +236,7 @@ bNote = (root + 12 * bOct + bInterval) : ba.sAndH(bHit);
 bFreq = ba.midikey2hz(bNote) : si.smooth(ba.tau2pole(bGlide));
 bPh   = phasor(bFreq);
 sub   = (sin(TWO_PI * bPh) + 0.22 * sin(2.0 * TWO_PI * bPh)) * max(envAD(bHit, 0.006, bDec), bHold * everTrig(bHit))
-        : drive(bDrive) : fi.lowpass(2, bCut) : *(db2lin(bLevel) * subGate * duck);
+        : drive(bDrive) : fi.lowpass(2, bCut) : *(dbLin(bLevel) * subGate * duck);
 
 //===================================================================================
 // Hats — 808-style metallic source (six square waves) blended with noise
@@ -259,11 +259,11 @@ hPan    = C(hslider("h:hats/pan", 0.12, -0.5, 0.5, 0.01));
 hSpread = C(hslider("h:hats/spread", 0.1, 0, 0.5, 0.001));
 
 hHit    = late(11, hit(hMask, hProb, hGhost, 4));
-hAcc    = select2(onPattern(hMask), db2lin(-9.0), 1.0) * vel(12, hVel);
+hAcc    = select2(onPattern(hMask), dbLin(-9.0), 1.0) * vel(12, hVel);
 hDecM   = hDec * pow(2.0, 0.35 * motion * walk(44, 43.0));
 // metal is shared; the noise part has its own stream per side (real stereo, not panning)
 hSrc(k) = metal * hMetal + wnoise(seed, k) * (1.0 - hMetal) * 0.6;
-hEnvG   = envAD(hHit, hAtt, hDecM) * hAcc * 40.0 * db2lin(hLevel) * hatsGate;
+hEnvG   = envAD(hHit, hAtt, hDecM) * hAcc * 40.0 * dbLin(hLevel) * hatsGate;
 hCh(k)  = hSrc(k) : fi.highpass(2, hHP) : fi.highpass(2, hHP) : fi.lowpass(1, 15000) : *(hEnvG);
 hPanHit = hPan + hSpread * (stepRand(13) * 2.0 - 1.0);
 hatsS   = panPair(hPanHit, hCh(10), hCh(15));
@@ -280,7 +280,7 @@ ohDec    = C(hslider("h:ohat/decay[unit:s]", 0.22, 0.05, 0.8, 0.001));
 ohPan    = C(hslider("h:ohat/pan", -0.1, -0.5, 0.5, 0.01));
 
 ohHit = late(15, hit(ohMask, ohProb, 0, 14));
-ohEnvG = envAD(ohHit, 0.002, ohDec) * vel(16, 2.0) * 17.0 * db2lin(ohLevel) * ohatGate;
+ohEnvG = envAD(ohHit, 0.002, ohDec) * vel(16, 2.0) * 17.0 * dbLin(ohLevel) * ohatGate;
 ohCh(k) = (metal * 0.8 + wnoise(seed, k) * 0.35) : fi.highpass(2, ohBright) : fi.highpass(1, ohBright) : fi.lowpass(1, 14000) : *(ohEnvG);
 ohatS  = panPair(ohPan, ohCh(13), ohCh(16));
 
@@ -301,7 +301,7 @@ cGap  = 0.009 * SR;
 cBurst(i) = (cT >= i * cGap) * exp(0.0 - max(0.0, cT - i * cGap) / (0.0025 * SR));
 cTail = (cT >= 2.0 * cGap) * exp(0.0 - max(0.0, cT - 2.0 * cGap) / max(1.0, cDec * SR));
 cEnv  = everTrig(cHit) * ((cBurst(0) + cBurst(1) + cBurst(2)) * 0.6 + cTail * 0.8);
-cCh(k) = wnoise(seed, k) : fi.highpass(2, cTone * 0.55) : fi.lowpass(2, cTone * 2.6) : *(cEnv * 12.0 * db2lin(cLevel) * clapGate);
+cCh(k) = wnoise(seed, k) : fi.highpass(2, cTone * 0.55) : fi.lowpass(2, cTone * 2.6) : *(cEnv * 12.0 * dbLin(cLevel) * clapGate);
 clapS  = panPair(cPan, cCh(22), cCh(23));
 clapM  = (cCh(22) + cCh(23)) * 0.5;
 
@@ -323,7 +323,7 @@ pExc  = wnoise(seed, 11) * envAD(pHit, 0.0003, 0.004) * 3.5;
 pPing = pExc <: fi.resonbp(pFreq, pQ, 1.0), fi.resonbp(pFreq * 1.48, pQ, 0.5) :> _;
 pTomF = pFreq * 0.18 * (1.0 + 1.5 * exp(0.0 - tsince(pHit) / (0.02 * SR)));
 pTom  = sin(TWO_PI * phasorReset(pHit, pTomF)) * envAD(pHit, 0.001, 0.18);
-perc  = (pPing * (1.0 - pBody) * 10.0 + pTom * pBody * 0.8) * vel(20, 3.0) * db2lin(pLevel) * percGate;
+perc  = (pPing * (1.0 - pBody) * 10.0 + pTom * pBody * 0.8) * vel(20, 3.0) * dbLin(pLevel) * percGate;
 pPanHit = pPan + pSpread * (stepRand(21) * 2.0 - 1.0);
 
 //===================================================================================
@@ -369,7 +369,7 @@ aNorm  = (log10(max(20.0, aFc) / 2.0) - 1.0) / 3.0;   // moogLadder's normalised
 aQ     = 0.707 + aRes * 18.0;
 aOsc   = os.sawtooth(aFreq) * (1.0 - aWave) + os.square(aFreq) * aWave;
 acid   = aOsc * (1.0 + aDrive) : ve.moogLadder(aNorm, aQ) : *(1.0 + aRes) : drive(aDrive)
-         : *(aAmp * select2(aAcc, 1.0, 1.4) * 2.0 * db2lin(aLevel) * acidGate * duck);
+         : *(aAmp * select2(aAcc, 1.0, 1.4) * 2.0 * dbLin(aLevel) * acidGate * duck);
 
 //===================================================================================
 // Dub stab — one chord in a fixed key, detuned and spread, a 4-pole filter envelope,
@@ -395,7 +395,7 @@ sOscL   = (sVoice(0, sDet) + sVoice(1, 0.0 - sDet) + sVoice(2, sDet * 0.5) + sVo
 sOscR   = (sVoice(0, 0.0 - sDet) + sVoice(1, sDet) + sVoice(2, 0.0 - sDet * 0.5) + sVoice(3, sDet * 0.7)) * 0.25;
 sCutM   = sCut * pow(2.0, 0.5 * motion * walk(42, 41.0));
 sFc     = min(10000.0, sCutM * (1.0 + sEnvAmt * envAD(sHit, 0.002, sFDec)));
-sGain   = envAD(sHit, 0.003, sDec) * db2lin(sLevel) * stabGate * duck * 1.8;
+sGain   = envAD(sHit, 0.003, sDec) * dbLin(sLevel) * stabGate * duck * 1.8;
 stabL   = sOscL : ve.moog_vcf_2bn(sRes, sFc) : *(sGain) : betaChords;
 stabR   = sOscR : ve.moog_vcf_2bn(sRes, sFc) : *(sGain) : betaChords;
 
@@ -428,7 +428,7 @@ betaAM(x) = x + (x : fi.bandpass(1, 200, 1000)) * (amMod - 1.0);
 amChords = C(hslider("h:beta/chords", 0, 0, 1, 0.001));
 betaChords(x) = x + (x : fi.bandpass(1, 200, 1000)) * (amMod - 1.0) * amChords;
 
-padGain = db2lin(paLevel + paBreath * motion * walk(32, 23.0)) * padGate * duck;
+padGain = dbLin(paLevel + paBreath * motion * walk(32, 23.0)) * padGate * duck;
 padOutL = padL : betaAM : *(padGain);
 padOutR = padR : betaAM : *(padGain);
 
@@ -442,7 +442,7 @@ nAir    = C(hslider("h:noise/air[unit:dB]", -80, -80, -20, 0.1));
 nFollow = C(hslider("h:noise/airFollow", 0, 0, 1, 0.001));
 nGust   = C(hslider("h:noise/gust", 0, 0, 1, 0.001));
 nPump   = C(hslider("h:noise/pump", 0, 0, 1, 0.001));
-nGain   = db2lin(nLevel) * noiseGate * duck;
+nGain   = dbLin(nLevel) * noiseGate * duck;
 
 pinkOf(x)  = x : no.pink_filter : *(2.3);
 brownOf(x) = x : fi.pole(0.9985) : fi.highpass(1, 20) : *(0.075);
@@ -454,7 +454,7 @@ airGust   = 1.0 + nGust * walk(296, 7.0);
 // `pump` lets the air breathe with the beat too, as deep as asked: the breath of a groove
 // that has no ticks in it
 airPump   = 1.0 - nPump * duckEnv;
-air(k) = wnoise(seed, k) : fi.resonbp(airCentre, 2.5, 1.0) : *(db2lin(nAir) * noiseGate * 2.0 * airGust) : *(airPump);
+air(k) = wnoise(seed, k) : fi.resonbp(airCentre, 2.5, 1.0) : *(dbLin(nAir) * noiseGate * 2.0 * airGust) : *(airPump);
 noiseL = bed(20) + air(26);
 noiseR = bed(21) + air(27);
 
@@ -486,9 +486,9 @@ rnSwell = 1.0 + 0.3 * motion * walk(210, 47.0);
 patter(k) = (fires(k, rate) * v * v * select2(ma.frac(v * 13.0) < 0.5, 1.0, -1.0))
             : fi.highpass(2, rnTone * 0.4) : fi.lowpass(2, rnTone * 1.8) : *(4.0)
 with { rate = rnDens * 0.5 * rnSwell; v = drawAt(k, rate); };
-wash(k)  = wnoise(seed, k) : fi.highpass(1, 400) : fi.lowpass(2, rnTone * 1.4) : *(db2lin(rnWash) * 0.35);
-murmur(k) = wnoise(seed, k) : fi.lowpass(2, 260) : *(db2lin(rnWash) * 1.3);
-rainG   = db2lin(rnLevel) * rainGate * rnSwell;
+wash(k)  = wnoise(seed, k) : fi.highpass(1, 400) : fi.lowpass(2, rnTone * 1.4) : *(dbLin(rnWash) * 0.35);
+murmur(k) = wnoise(seed, k) : fi.lowpass(2, 260) : *(dbLin(rnWash) * 1.3);
+rainG   = dbLin(rnLevel) * rainGate * rnSwell;
 rainL   = (patter(200) + wash(208) + murmur(212)) * rainG;
 rainR   = (patter(220) + wash(209) + murmur(213)) * rainG;
 
@@ -512,8 +512,8 @@ with {
   f    = max(0.0, e - 0.55) * 2.2;                 // the foam: only near the crest
   foam = n : fi.highpass(2, 1500) : fi.lowpass(1, 6000) : *(f * f * 0.35);
 };
-seDist(k) = wnoise(seed, k) : fi.lowpass(2, 500) : *(db2lin(seWash) * 2.5 * (0.8 + 0.2 * walk(k + 1, 23.0)));
-seaG = db2lin(seLevel) * seaGate;
+seDist(k) = wnoise(seed, k) : fi.lowpass(2, 500) : *(dbLin(seWash) * 2.5 * (0.8 + 0.2 * walk(k + 1, 23.0)));
+seaG = dbLin(seLevel) * seaGate;
 seaL = (seSide(304, 0.0) + seDist(306)) * seaG;
 seaR = (seSide(305, 0.05) + seDist(308)) * seaG;
 
@@ -530,7 +530,7 @@ with {
   w = 0.5 + 0.5 * walk(k, liSwell * (0.8 + 0.12 * v));   // each note on its own clock
   a = 0.35 + 0.65 * w * w;
 };
-lightG = db2lin(liLevel) * lightGate * 0.5;
+lightG = dbLin(liLevel) * lightGate * 0.5;
 lightS = (pan(-0.6, liVoice(0, 320)), pan(0.2, liVoice(1, 322)), pan(-0.2, liVoice(2, 324)), pan(0.6, liVoice(3, 326)))
          :> (*(lightG), *(lightG));
 
@@ -557,7 +557,7 @@ with {
   dc(d) = decay(t, 1.0, glDecay * d);
 };
 glPan(pv, k) = ma.frac(glU(pv, k) * 53.7) * 1.2 - 0.6;
-glassG = db2lin(glLevel) * glassGate * 0.5;
+glassG = dbLin(glLevel) * glassGate * 0.5;
 glassS = (pan(glPan(1, 240), glBell(1, 240)), pan(glPan(0, 250), glBell(0, 250))) :> (*(glassG), *(glassG));
 glassM = (L(glassS) + R(glassS)) * 0.5;
 
@@ -571,8 +571,8 @@ huF = ba.midikey2hz(root - 12);
 // off above `tone`
 huH(n) = os.osc(huF * n) * (1.0 / n) / (1.0 + w * w) with { w = huF * n / huTone; };
 humTone = (huH(2) + huH(3) * 0.8 + huH(4) + huH(5) * 0.6 + huH(6)) * (0.8 + 0.2 * walk(280, 13.0)) * 1.2;
-rush(k) = wnoise(seed, k) : fi.bandpass(1, 250, 2500) : fi.lowpass(1, 900) : *(db2lin(huRush) * 2.0 * (0.7 + 0.3 * walk(k + 1, 19.0)));
-humG = db2lin(huLevel) * humGate * duck;
+rush(k) = wnoise(seed, k) : fi.bandpass(1, 250, 2500) : fi.lowpass(1, 900) : *(dbLin(huRush) * 2.0 * (0.7 + 0.3 * walk(k + 1, 19.0)));
+humG = dbLin(huLevel) * humGate * duck;
 humL = (humTone + rush(284)) * humG;
 humR = (humTone * 0.9 + rush(286)) * humG;
 
@@ -605,7 +605,7 @@ with {
   w = 0.5 + 0.5 * walk(k, srBloom * (0.7 + 0.6 * ma.frac(n * 0.381966)));
   a = wt * (pow(n, -0.5) * (1.0 - srTilt) + pow(n, -1.5) * srTilt) * (0.2 + 0.8 * w * w);
 };
-seriesG = db2lin(srLevel) * seriesGate * duck * 0.6;
+seriesG = dbLin(srLevel) * seriesGate * duck * 0.6;
 seriesS = (srPart(1, 400, 1.0), srPart(2, 402, 1.0), srPart(3, 404, 1.0), srPart(4, 406, 1.0),
            srPart(6, 408, 1.0), srPart(8, 410, 1.0), srPart(12, 412, 1.0), srPart(16, 414, 1.0),
            srPart(7, 418, srSeven))
@@ -645,7 +645,7 @@ with {
   slotB = os.sawtooth(ptF0 * semis(nb) * cents);
   lev   = 0.8 + 0.2 * walk(k, 17.0 + 3.0 * pn);
 };
-partsG = db2lin(ptLevel) * partsGate * duck * 0.5;
+partsG = dbLin(ptLevel) * partsGate * duck * 0.5;
 partsS = (part(ptLow, 440, -0.1, 0.3), part(ptIn1, 442, -0.5, -1.0), part(ptIn2, 444, 0.5, 1.0), part(ptTop, 446, 0.2, -0.6))
          :> (fi.lowpass(2, ptBright) : *(partsG)), (fi.lowpass(2, ptBright) : *(partsG));
 
@@ -672,9 +672,9 @@ veSide(b) = sum(i, 8, src : fi.resonbp(veF(i), 16.0, 1.0) : *(veGain(i))) * 4.5 
 with {
   src  = wnoise(seed, b + 15) : no.pink_filter;
   // the body is the part that covers speech: soft air across the band intelligibility lives in
-  body = wnoise(seed, b + 16) : no.pink_filter : fi.highpass(2, 700) : fi.lowpass(2, 4500) : *(db2lin(veBody) * 60.0);
+  body = wnoise(seed, b + 16) : no.pink_filter : fi.highpass(2, 700) : fi.lowpass(2, 4500) : *(dbLin(veBody) * 60.0);
 };
-veilG = db2lin(veLevel) * veilGate;
+veilG = dbLin(veLevel) * veilGate;
 veilL = veSide(480) * veilG;
 veilR = veSide(520) * veilG;
 
@@ -765,7 +765,7 @@ guardStage(l, r) = l2, r2
 with {
   st   = lin2db(msOf(l, r, 1.5));
   grDb = min(0.0, maxLoudDb - st) : si.smooth(ba.tau2pole(2.0));
-  g    = db2lin(grDb);
+  g    = dbLin(grDb);
   hf   = (((l : fi.highpass(2, 4000)) ^ 2 + (r : fi.highpass(2, 4000)) ^ 2) * 0.5) : si.smooth(ba.tau2pole(1.5));
   ratio = lin2db(hf) - lin2db(msOf(l, r, 1.5) + 1.0e-12);
   cut  = min(0.0, maxBright - ratio) : max(-18.0) : si.smooth(ba.tau2pole(1.0));
@@ -781,16 +781,16 @@ with {
   st    = lin2db(msOf(l, r, 1.5));
   cdb   = min(max(st + crestDb, -50.0), ceilDb);
   peak  = max(abs(l), abs(r)) : ba.slidingMax(LA, LA);
-  gt    = min(1.0, db2lin(cdb) / max(peak, 1.0e-9));
+  gt    = min(1.0, dbLin(cdb) / max(peak, 1.0e-9));
   gmin  = gt : ba.slidingMin(LA, LA);
   ac    = 1.0 - exp(-1.0 / (0.0015 * SR));
   rc    = 1.0 - exp(-1.0 / (0.25 * SR));
   g     = (\(prev).(select2(gmin < prev, prev + (gmin - prev) * rc, prev + (gmin - prev) * ac))) ~ _;
 };
 
-floorTone = sin(TWO_PI * phasor(18.0)) * db2lin(floorDb + 3.0103) * floorOn;
+floorTone = sin(TWO_PI * phasor(18.0)) * dbLin(floorDb + 3.0103) * floorOn;
 
-chain = (mixL, mixR) : msWidth : xfeed : bus : (*(db2lin(master)), *(db2lin(master)))
+chain = (mixL, mixR) : msWidth : xfeed : bus : (*(dbLin(master)), *(dbLin(master)))
         : guardStage : limiter
         : (+(floorTone), +(floorTone));
 

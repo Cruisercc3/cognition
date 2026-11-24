@@ -13,6 +13,7 @@
     "build": "npm run dsp && electron-vite build",
     "start": "electron .",
     "dsp": "node tools/dsp/build-dsp.ts",
+    "bench": "node tools/dsp/bench.ts",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "vitest run",
     "selftest": "npm run build && electron . --selftest",
